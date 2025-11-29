@@ -25,11 +25,6 @@
             --c-dark: #8D8FA4;
             --c-text: #5A6275;
             --c-white: #ffffff;
-            
-            --c-1: #D6C3B4;
-            --c-2: #8E9AAB;
-            --c-3: #9297AB;
-            --c-4: #B6BBBE;
         }
 
         * {
@@ -68,7 +63,7 @@
             text-shadow: 2px 2px 0px var(--c-light);
         }
 
-        /* --- 圖片樣式 (首頁與 Loading 共用) --- */
+        /* --- 圖片樣式 --- */
         .cover-image-wrap {
             width: 100%;
             display: flex;
@@ -153,29 +148,27 @@
             box-shadow: 2px 2px 0px var(--c-dark);
         }
 
-        /* --- Loading 區塊 (修改後) --- */
+        /* --- Loading 區塊 --- */
         .loading-section {
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 70vh; /* 稍微增加高度確保置中 */
+            height: 70vh;
         }
 
-        /* 需求2：Loading 畫面改用圖片 */
+        /* 需求1：Loading 圖片改為 heartbeat.png */
         .loading-image {
-            width: 250px; /* 控制 Loading 圖片大小 */
+            width: 120px; /* 心跳圖通常不需要太大，您可以調整 */
             height: auto;
-            border-radius: 12px;
-            box-shadow: 5px 5px 20px rgba(0,0,0,0.15);
-            /* 加入呼吸燈動畫取代旋轉 */
-            animation: breathe 2s infinite ease-in-out;
+            /* 輕微的呼吸/心跳動畫 */
+            animation: breathe 1.5s infinite ease-in-out;
         }
 
         @keyframes breathe {
-            0% { transform: scale(0.98); opacity: 0.9; }
-            50% { transform: scale(1.02); opacity: 1; }
-            100% { transform: scale(0.98); opacity: 0.9; }
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
 
         .loading-text {
@@ -200,6 +193,23 @@
             animation: fadeIn 1s ease;
         }
 
+        /* 需求4：結果頁標題 */
+        .result-title {
+            color: var(--c-primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        /* 需求5：結果頁歌曲名稱內文 */
+        .result-song-name {
+            color: var(--c-text);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -208,7 +218,7 @@
         .result-card {
             width: 300px;
             height: 300px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             box-shadow: 10px 10px 20px rgba(0,0,0,0.15);
             border-radius: 8px;
             overflow: hidden;
@@ -304,11 +314,15 @@
     </div>
 
     <div class="loading-section" id="loadingSection">
-        <img src="player.jpg" alt="Loading Soul Frequency" class="loading-image">
+        <img src="heartbeat.png" alt="Loading Heartbeat" class="loading-image">
         <p class="loading-text">正在讀取你的靈魂頻率...</p>
     </div>
 
     <div class="result-section" id="resultSection">
+        <h2 class="result-title">你的命定情歌是</h2>
+        
+        <div class="result-song-name" id="resultSongText"></div>
+
         <div class="result-card">
             <canvas id="resultCanvas" width="600" height="600"></canvas>
             <img id="resultImage" alt="Result Cover" />
@@ -329,23 +343,32 @@
         IE: null, NS: null, FT: null, PJ: null
     };
 
-    // 顏色定義
+    // 顏色定義 (用於備案繪圖)
     const colors = {
         bg: ['#EAE0D7', '#DDCFC2', '#D6C3B4'],
         shapes: ['#97A5C0', '#75809C', '#8E9AAB', '#D3BBB7', '#8D8FA4']
     };
 
     // 結果對照表
+    // 需求2：ESFJ 改為「喜歡一個人」
+    // 需求3：INTJ 圖片改為 convert_intj.jpg，並新增 overlayText 屬性來處理遮罩文字
     const resultMap = {
-        'INTJ': { song: 'i 人情歌', image: 'cover_intj.jpg' }, 
+        'INTJ': { 
+            song: 'i 人情歌', 
+            image: 'convert_intj.jpg', 
+            overlayText: '黃玠瑋〈 i 人情歌〉' 
+        }, 
         'INFJ': { song: 'i 人情歌' }, 'INFP': { song: 'i 人情歌' }, 
         'ISTP': { song: 'i 人情歌' }, 'ISFP': { song: 'i 人情歌' }, 
         'ISTJ': { song: 'i 人情歌' }, 'ISFJ': { song: 'i 人情歌' },
+        
         'INTP': { song: 'I could be yours' }, 'ESTP': { song: 'I could be yours' }, 
         'ESTJ': { song: 'I could be yours' },
+        
         'ENTJ': { song: '喜歡一個人' }, 'ENTP': { song: '喜歡一個人' },
-        'ENFJ': { song: 'Little Present' }, 'ESFP': { song: 'Little Present' },
-        'ESFJ': { song: '如果你冷' }
+        'ESFJ': { song: '喜歡一個人' }, // 修正點
+        
+        'ENFJ': { song: 'Little Present' }, 'ESFP': { song: 'Little Present' }
     };
 
     // 選擇按鈕邏輯
@@ -371,6 +394,9 @@
         const mbtiResult = `${userSelection.IE}${userSelection.NS}${userSelection.FT}${userSelection.PJ}`;
         const resultData = resultMap[mbtiResult] || { song: 'Little Present' };
 
+        // 需求5：在結果頁面更新內文顯示
+        document.getElementById('resultSongText').innerText = resultData.song;
+
         generateResultImage(mbtiResult, resultData, () => {
              setTimeout(() => {
                 document.getElementById('loadingSection').style.display = 'none';
@@ -390,7 +416,37 @@
         if (resultData.image) {
             const img = new Image();
             img.onload = function() {
+                // 1. 繪製底圖
                 ctx.drawImage(img, 0, 0, w, h);
+                
+                // 需求3：樣式修改為圖片上壓上三分之一半透明遮罩在下方
+                const maskHeight = h / 3;
+                const maskY = h - maskHeight;
+                
+                // 繪製半透明白色遮罩
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                ctx.fillRect(0, maskY, w, maskHeight);
+                
+                // 繪製遮罩上的文字
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#5A6275'; // 使用深灰色字體
+                
+                // 使用 overlayText (例如：黃玠瑋〈 i 人情歌〉) 優先，如果沒有則使用 song
+                const textToDraw = resultData.overlayText || resultData.song;
+                
+                // 自動調整字體大小以適應寬度
+                let fontSize = 48;
+                ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
+                // 簡單的文字寬度檢查
+                while (ctx.measureText(textToDraw).width > w * 0.9 && fontSize > 20) {
+                    fontSize -= 2;
+                    ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
+                }
+                
+                ctx.fillText(textToDraw, w/2, maskY + maskHeight/2);
+
+                // 輸出圖片
                 imgOutput.src = canvas.toDataURL('image/jpeg', 0.9);
                 if (callback) callback();
             };
@@ -409,7 +465,7 @@
         }
     }
 
-    // 繪製備用圖
+    // 繪製備用圖 (當沒有圖片檔時)
     function drawFallbackResult(ctx, w, h, mbti, song) {
         const bgColor = colors.bg[Math.floor(Math.random() * colors.bg.length)];
         ctx.fillStyle = bgColor;
