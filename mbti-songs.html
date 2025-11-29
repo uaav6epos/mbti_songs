@@ -53,32 +53,34 @@
             position: relative;
         }
 
+        /* 修改：縮減標題間距 (原本 margin: 1.5rem 0 2rem) */
         h1 {
             color: var(--c-primary);
             text-align: center;
             font-size: 1.5rem;
-            margin: 1.5rem 0 2rem;
-            line-height: 1.6;
+            margin: 0.75rem 0 1rem; /* 上下間距縮減 50% */
+            line-height: 1.4;
             text-shadow: 2px 2px 0px var(--c-light);
         }
 
-        /* --- 首頁大圖樣式 (新增) --- */
+        /* --- 首頁大圖樣式 --- */
         .cover-image-wrap {
             width: 100%;
             display: flex;
             justify-content: center;
-            margin-bottom: 0.5rem;
+            /* 圖片下方原本有間距，這裡保持微量或移除，由 h1 margin 控制 */
+            margin-bottom: 0.2rem; 
         }
 
         .cover-image {
             width: 100%;
-            height: 150px;
-            border-radius: 10px; /* 圓角讓圖片柔和一點 */
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1); /* 增加立體感 */
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
             object-fit: cover;
         }
 
-        /* --- Loading 頁面的唱機樣式 (保留用於動畫) --- */
+        /* --- Loading 頁面的唱機樣式 --- */
         .record-player-wrap {
             display: flex;
             justify-content: center;
@@ -96,7 +98,6 @@
             border: 4px solid var(--c-4);
         }
 
-        /* 黑膠紋路 */
         .record-player::before {
             content: '';
             position: absolute;
@@ -114,7 +115,6 @@
             border: 3px solid #eee;
         }
 
-        /* Loading 頁面尺寸 */
         .loading-player .record-player {
             width: 250px;
             height: 250px;
@@ -139,8 +139,18 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            /* 修改：縮小整體元件間距，讓畫面更緊湊 */
+            gap: 0.5rem; 
             transition: opacity 0.5s;
+        }
+
+        /* 新增：網格佈局容器 (用於兩欄兩列) */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 兩欄 */
+            gap: 12px; /* 按鈕組之間的間距 */
+            width: 100%;
+            margin-bottom: 0.5rem;
         }
 
         .toggle-group {
@@ -148,19 +158,20 @@
             justify-content: space-between;
             background: var(--c-light);
             border-radius: 50px;
-            padding: 5px;
+            padding: 4px; /* 稍微縮小內距 */
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+            width: 100%; /* 確保填滿網格 */
         }
 
         .toggle-btn {
             flex: 1;
             border: none;
             background: transparent;
-            padding: 12px;
+            padding: 10px 0; /* 修改：調整 padding 避免在小螢幕換行 */
             border-radius: 50px;
             font-family: 'Noto Sans TC', sans-serif;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem; /* 稍微縮小字體以適應兩欄 */
             color: var(--c-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -174,7 +185,7 @@
         }
 
         .submit-btn {
-            margin-top: 1rem;
+            margin-top: 0.5rem;
             background-color: var(--c-accent);
             color: #fff;
             border: none;
@@ -186,6 +197,7 @@
             cursor: pointer;
             box-shadow: 4px 4px 0px var(--c-dark);
             transition: transform 0.1s;
+            width: 100%;
         }
 
         .submit-btn:active {
@@ -193,7 +205,7 @@
             box-shadow: 2px 2px 0px var(--c-dark);
         }
 
-        /* --- 動畫區塊 --- */
+        /* --- Loading / Result 區塊 (維持原樣) --- */
         .loading-section {
             display: none;
             flex-direction: column;
@@ -215,7 +227,6 @@
             50% { opacity: 1; }
         }
 
-        /* --- 結果區塊 --- */
         .result-section {
             display: none;
             flex-direction: column;
@@ -300,26 +311,28 @@
             <img src="player.jpg" alt="Winter Record Player" class="cover-image">
         </div>
         
-        <h1>輸入你的 MBTI<br>測驗這個冬日你的命定情歌</h1>
+        <h1>點擊選擇你的 MBTI<br>測驗這個冬日你的命定情歌🎵</h1>
         
-        <div class="toggle-group" data-type="IE">
-            <button class="toggle-btn" onclick="selectOption('IE', 'I')">I</button>
-            <button class="toggle-btn" onclick="selectOption('IE', 'E')">E</button>
-        </div>
-        
-        <div class="toggle-group" data-type="NS">
-            <button class="toggle-btn" onclick="selectOption('NS', 'N')">N</button>
-            <button class="toggle-btn" onclick="selectOption('NS', 'S')">S</button>
-        </div>
+        <div class="options-grid">
+            <div class="toggle-group" data-type="IE">
+                <button class="toggle-btn" onclick="selectOption('IE', 'I')">I</button>
+                <button class="toggle-btn" onclick="selectOption('IE', 'E')">E</button>
+            </div>
+            
+            <div class="toggle-group" data-type="NS">
+                <button class="toggle-btn" onclick="selectOption('NS', 'N')">N</button>
+                <button class="toggle-btn" onclick="selectOption('NS', 'S')">S</button>
+            </div>
 
-        <div class="toggle-group" data-type="FT">
-            <button class="toggle-btn" onclick="selectOption('FT', 'F')">F</button>
-            <button class="toggle-btn" onclick="selectOption('FT', 'T')">T</button>
-        </div>
+            <div class="toggle-group" data-type="FT">
+                <button class="toggle-btn" onclick="selectOption('FT', 'F')">F</button>
+                <button class="toggle-btn" onclick="selectOption('FT', 'T')">T</button>
+            </div>
 
-        <div class="toggle-group" data-type="PJ">
-            <button class="toggle-btn" onclick="selectOption('PJ', 'P')">P</button>
-            <button class="toggle-btn" onclick="selectOption('PJ', 'J')">J</button>
+            <div class="toggle-group" data-type="PJ">
+                <button class="toggle-btn" onclick="selectOption('PJ', 'P')">P</button>
+                <button class="toggle-btn" onclick="selectOption('PJ', 'J')">J</button>
+            </div>
         </div>
 
         <button class="submit-btn" onclick="submitQuiz()">送出測驗</button>
@@ -362,7 +375,6 @@
     };
 
     // 結果對照表
-    // 請確保 cover_intj.jpg 存在
     const resultMap = {
         'INTJ': { song: 'i 人情歌', image: 'cover_intj.jpg' }, 
         'INFJ': { song: 'i 人情歌' }, 'INFP': { song: 'i 人情歌' }, 
