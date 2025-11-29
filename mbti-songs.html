@@ -39,14 +39,13 @@
 
         .container {
             width: 100%; max-width: 480px;
-            /* 預設首頁的 padding */
             padding: 2rem 1.5rem;
             display: flex; flex-direction: column;
             align-items: center; position: relative;
-            transition: padding 0.3s ease; /* 加入過渡效果 */
+            transition: padding 0.3s ease;
         }
         
-        /* 需求1：結果頁面時，透過 JS 加入此 class 來調整頂部間隔為 3px */
+        /* 結果頁面時頂部間隔為 3px */
         .container.result-mode {
             padding-top: 3px;
         }
@@ -165,11 +164,11 @@
             -webkit-user-select: none; -webkit-touch-callout: default;
         }
 
-        /* 需求3：將上下間隙縮減，讓卡片和 MV 靠近一點 */
+        /* 需求2：結果卡片跟 MV 之間間隔增加 10% */
         .hint-text {
             font-size: 0.85rem; color: var(--c-dark);
-            /* 原本是 20px，縮減為 10px，拉近距離 */
-            margin: 10px 0; 
+            /* 原本 10px，增加到 15px，讓間隔稍微變大 */
+            margin: 15px 0; 
             opacity: 0.9;
             text-align: center;
             line-height: 1.6;
@@ -264,7 +263,6 @@
         shapes: ['#97A5C0', '#75809C', '#8E9AAB', '#D3BBB7', '#8D8FA4']
     };
 
-    // 結果對照表
     const resultMap = {
         'INTJ': { 
             song: 'i 人情歌', 
@@ -297,7 +295,6 @@
         document.getElementById('quizSection').style.display = 'none';
         document.getElementById('loadingSection').style.display = 'flex';
         
-        // 需求1：切換到結果模式，調整頂部間距
         document.querySelector('.container').classList.add('result-mode');
         
         const mbtiResult = `${userSelection.IE}${userSelection.NS}${userSelection.FT}${userSelection.PJ}`;
@@ -333,13 +330,11 @@
 
         // 標題
         ctx.font = 'bold 32px "Noto Sans TC", sans-serif';
-        // 需求2：調整標題位置 Y=40
         ctx.fillText("你的命定情歌是", canvasWidth / 2, 40);
 
         // 歌名
         const textToShow = resultData.displayText || resultData.song;
         
-        // 歌名文字大小維持上一次修改的 34px
         let fontSize = 34; 
         ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
         
@@ -348,8 +343,9 @@
             ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
         }
         
-        // 需求2：調整歌名位置 Y=110，增加與標題的距離
-        ctx.fillText(textToShow, canvasWidth / 2, 110);
+        // 需求1：結果卡片的兩行字間隔縮減 10%
+        // 原本 Y=110，距離 40 差距 70。縮減 10% 後約為 63，所以位置上移至 103
+        ctx.fillText(textToShow, canvasWidth / 2, 103);
 
         // 3. 圖片
         if (resultData.image) {
@@ -416,9 +412,7 @@
         document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById('resultSection').style.display = 'none';
         document.getElementById('quizSection').style.display = 'flex';
-        // 移除結果模式樣式
         document.querySelector('.container').classList.remove('result-mode');
-        // 重整 iframe
         const iframe = document.querySelector('.video-iframe');
         iframe.src = iframe.src;
     }
