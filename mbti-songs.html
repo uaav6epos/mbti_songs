@@ -16,7 +16,6 @@
     
     <style>
         :root {
-            /* 定義色票 */
             --c-bg: #EAE0D7;
             --c-primary: #75809C;
             --c-secondary: #97A5C0;
@@ -27,170 +26,114 @@
             --c-white: #ffffff;
         }
 
-        * {
-            box-sizing: border-box;
-            user-select: none; 
-        }
-
+        * { box-sizing: border-box; user-select: none; }
+        
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             background-color: var(--c-bg);
             font-family: 'Noto Sans TC', sans-serif;
             color: var(--c-text);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            display: flex; justify-content: center;
+            min-height: 100vh; overflow-x: hidden;
         }
 
         .container {
-            width: 100%;
-            max-width: 480px;
+            width: 100%; max-width: 480px;
             padding: 2rem 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
+            display: flex; flex-direction: column;
+            align-items: center; position: relative;
         }
 
         h1 {
-            color: var(--c-primary);
-            text-align: center;
-            font-size: 1.5rem;
-            margin: 0.75rem 0 1rem;
-            line-height: 1.4;
-            text-shadow: 2px 2px 0px var(--c-light);
+            color: var(--c-primary); text-align: center;
+            font-size: 1.5rem; margin: 0.75rem 0 1rem;
+            line-height: 1.4; text-shadow: 2px 2px 0px var(--c-light);
         }
 
-        /* --- 圖片樣式 --- */
         .cover-image-wrap {
-            width: 100%;
-            display: flex;
-            justify-content: center;
+            width: 100%; display: flex; justify-content: center;
             margin-bottom: 0.2rem; 
         }
 
         .cover-image {
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            width: 100%; height: auto;
+            border-radius: 12px; box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
             object-fit: cover;
         }
 
-        /* --- 選擇器樣式 --- */
+        /* --- 選項區 --- */
         .quiz-section {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem; 
-            transition: opacity 0.5s;
+            width: 100%; display: flex; flex-direction: column;
+            gap: 0.5rem; transition: opacity 0.5s;
         }
-
         .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            width: 100%;
-            margin-bottom: 0.5rem;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px; width: 100%; margin-bottom: 0.5rem;
         }
-
         .toggle-group {
-            display: flex;
-            justify-content: space-between;
-            background: var(--c-light);
-            border-radius: 50px;
-            padding: 4px;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between;
+            background: var(--c-light); border-radius: 50px;
+            padding: 4px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
             width: 100%;
         }
-
         .toggle-btn {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 10px 0;
-            border-radius: 50px;
+            flex: 1; border: none; background: transparent;
+            padding: 10px 0; border-radius: 50px;
             font-family: 'Noto Sans TC', sans-serif;
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: var(--c-secondary);
-            cursor: pointer;
+            font-weight: bold; font-size: 1.1rem;
+            color: var(--c-secondary); cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .toggle-btn.active {
-            background-color: var(--c-primary);
-            color: var(--c-bg);
+            background-color: var(--c-primary); color: var(--c-bg);
             box-shadow: 2px 2px 5px rgba(117, 128, 156, 0.3);
             transform: scale(1.05);
         }
-
         .submit-btn {
-            margin-top: 0.5rem;
-            background-color: var(--c-accent);
-            color: #fff;
-            border: none;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 1.2rem;
+            margin-top: 0.5rem; background-color: var(--c-accent);
+            color: #fff; border: none; padding: 15px;
+            border-radius: 15px; font-size: 1.2rem;
             font-family: 'Noto Sans TC', sans-serif;
-            font-weight: bold;
-            cursor: pointer;
+            font-weight: bold; cursor: pointer;
             box-shadow: 4px 4px 0px var(--c-dark);
-            transition: transform 0.1s;
-            width: 100%;
+            transition: transform 0.1s; width: 100%;
         }
-
         .submit-btn:active {
             transform: translate(2px, 2px);
             box-shadow: 2px 2px 0px var(--c-dark);
         }
 
-        /* --- Loading 區塊 --- */
+        /* --- Loading --- */
         .loading-section {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
             height: 70vh;
         }
-
         .loading-image {
-            width: 120px;
-            height: auto;
+            width: 120px; height: auto;
             animation: breathe 1.5s infinite ease-in-out;
         }
-
         @keyframes breathe {
             0% { transform: scale(1); opacity: 0.8; }
             50% { transform: scale(1.1); opacity: 1; }
             100% { transform: scale(1); opacity: 0.8; }
         }
-
         .loading-text {
-            margin-top: 2rem;
-            color: var(--c-dark);
-            font-size: 1.1rem;
-            letter-spacing: 2px;
+            margin-top: 2rem; color: var(--c-dark);
+            font-size: 1.1rem; letter-spacing: 2px;
             animation: pulse 1.5s infinite;
         }
-
         @keyframes pulse {
             0%, 100% { opacity: 0.6; }
             50% { opacity: 1; }
         }
 
-        /* --- Result 區塊 --- */
+        /* --- Result --- */
         .result-section {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
+            display: none; flex-direction: column;
+            align-items: center; width: 100%;
             animation: fadeIn 1s ease;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -198,99 +141,68 @@
 
         .result-card {
             width: 300px;
-            height: 300px;
+            /* 修改：高度設為 auto，因為圖片變長了 */
+            height: auto;
             margin-bottom: 1rem;
             box-shadow: 10px 10px 20px rgba(0,0,0,0.15);
-            border-radius: 8px;
+            /* 圓角稍微縮小一點，看起來比較像卡片 */
+            border-radius: 12px; 
             overflow: hidden;
-            background: #fff;
-            position: relative;
+            background: #fff; position: relative;
         }
 
-        #resultCanvas {
-            display: none;
-        }
+        #resultCanvas { display: none; }
         
         #resultImage {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100%; 
+            /* 確保顯示整張長圖 */
+            height: auto; 
             display: block;
-            -webkit-user-select: none;
-            -webkit-touch-callout: default;
+            -webkit-user-select: none; -webkit-touch-callout: default;
         }
 
         .hint-text {
-            font-size: 0.9rem;
-            color: var(--c-dark);
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
+            font-size: 0.9rem; color: var(--c-dark);
+            margin-bottom: 1.5rem; opacity: 0.9;
             text-align: center;
         }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            width: 100%;
-        }
-
+        .action-buttons { display: flex; gap: 1rem; width: 100%; }
         .action-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            border: 2px solid var(--c-primary);
-            background: transparent;
-            color: var(--c-primary);
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Noto Sans TC', sans-serif;
-            transition: all 0.2s;
+            flex: 1; padding: 12px; border-radius: 10px;
+            border: 2px solid var(--c-primary); background: transparent;
+            color: var(--c-primary); font-weight: bold; cursor: pointer;
+            font-family: 'Noto Sans TC', sans-serif; transition: all 0.2s;
         }
-
-        .action-btn.share {
-            background: var(--c-primary);
-            color: var(--c-bg);
-        }
-
-        .action-btn:active {
-            transform: scale(0.98);
-        }
-        
+        .action-btn.share { background: var(--c-primary); color: var(--c-bg); }
+        .action-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
     <div class="quiz-section" id="quizSection">
         <div class="cover-image-wrap">
             <img src="player.jpg" alt="Winter Record Player" class="cover-image">
         </div>
-        
         <h1>輸入你的 MBTI<br>測驗這個冬日你的命定情歌</h1>
-        
         <div class="options-grid">
             <div class="toggle-group" data-type="IE">
                 <button class="toggle-btn" onclick="selectOption('IE', 'I')">I</button>
                 <button class="toggle-btn" onclick="selectOption('IE', 'E')">E</button>
             </div>
-            
             <div class="toggle-group" data-type="NS">
                 <button class="toggle-btn" onclick="selectOption('NS', 'N')">N</button>
                 <button class="toggle-btn" onclick="selectOption('NS', 'S')">S</button>
             </div>
-
             <div class="toggle-group" data-type="FT">
                 <button class="toggle-btn" onclick="selectOption('FT', 'F')">F</button>
                 <button class="toggle-btn" onclick="selectOption('FT', 'T')">T</button>
             </div>
-
             <div class="toggle-group" data-type="PJ">
                 <button class="toggle-btn" onclick="selectOption('PJ', 'P')">P</button>
                 <button class="toggle-btn" onclick="selectOption('PJ', 'J')">J</button>
             </div>
         </div>
-
         <button class="submit-btn" onclick="submitQuiz()">送出測驗</button>
     </div>
 
@@ -301,26 +213,19 @@
 
     <div class="result-section" id="resultSection">
         <div class="result-card">
-            <canvas id="resultCanvas" width="600" height="600"></canvas>
+            <canvas id="resultCanvas"></canvas>
             <img id="resultImage" alt="Result Cover" />
         </div>
-        <p class="hint-text">↑ 長按上方封面即可儲存圖片 ↑<br>（分享到 IG 需手動上傳喔！）</p>
-        
+        <p class="hint-text">↑ 長按上方圖片即可儲存收藏 ↑<br>（分享到 IG 需手動上傳喔！）</p>
         <div class="action-buttons">
             <button class="action-btn" onclick="resetQuiz()">重新測驗</button>
             <button class="action-btn share" onclick="handleShare()">分享結果</button>
         </div>
     </div>
-
 </div>
 
 <script>
-    // 狀態管理
-    const userSelection = {
-        IE: null, NS: null, FT: null, PJ: null
-    };
-
-    // 顏色定義 (用於備案繪圖)
+    const userSelection = { IE: null, NS: null, FT: null, PJ: null };
     const colors = {
         bg: ['#EAE0D7', '#DDCFC2', '#D6C3B4'],
         shapes: ['#97A5C0', '#75809C', '#8E9AAB', '#D3BBB7', '#8D8FA4']
@@ -331,22 +236,19 @@
         'INTJ': { 
             song: 'i 人情歌', 
             image: 'convert_intj.jpg', 
-            overlayText: '黃玠瑋〈 i 人情歌〉' 
+            // 這裡設定要顯示在圖片上方的完整文字
+            displayText: '黃玠瑋〈 i 人情歌〉' 
         }, 
         'INFJ': { song: 'i 人情歌' }, 'INFP': { song: 'i 人情歌' }, 
         'ISTP': { song: 'i 人情歌' }, 'ISFP': { song: 'i 人情歌' }, 
         'ISTJ': { song: 'i 人情歌' }, 'ISFJ': { song: 'i 人情歌' },
-        
         'INTP': { song: 'I could be yours' }, 'ESTP': { song: 'I could be yours' }, 
         'ESTJ': { song: 'I could be yours' },
-        
         'ENTJ': { song: '喜歡一個人' }, 'ENTP': { song: '喜歡一個人' },
         'ESFJ': { song: '喜歡一個人' },
-        
         'ENFJ': { song: 'Little Present' }, 'ESFP': { song: 'Little Present' }
     };
 
-    // 選擇按鈕邏輯
     function selectOption(group, value) {
         userSelection[group] = value;
         const groupEl = document.querySelector(`.toggle-group[data-type="${group}"]`);
@@ -356,20 +258,15 @@
         });
     }
 
-    // 送出測驗
     function submitQuiz() {
         if (!userSelection.IE || !userSelection.NS || !userSelection.FT || !userSelection.PJ) {
-            alert("請先完成所有 MBTI 選項喔！");
-            return;
+            alert("請先完成所有 MBTI 選項喔！"); return;
         }
-
         document.getElementById('quizSection').style.display = 'none';
         document.getElementById('loadingSection').style.display = 'flex';
-
+        
         const mbtiResult = `${userSelection.IE}${userSelection.NS}${userSelection.FT}${userSelection.PJ}`;
         const resultData = resultMap[mbtiResult] || { song: 'Little Present' };
-
-        // 修改：不再需要設置 HTML 元素的文字
 
         generateResultImage(mbtiResult, resultData, () => {
              setTimeout(() => {
@@ -379,152 +276,115 @@
         });
     }
 
-    // 生成圖片 (核心修改)
+    // 核心繪圖邏輯：上方文字區 + 下方圖片區
     function generateResultImage(mbti, resultData, callback) {
         const canvas = document.getElementById('resultCanvas');
         const ctx = canvas.getContext('2d');
-        const w = canvas.width;
-        const h = canvas.height;
         const imgOutput = document.getElementById('resultImage');
 
+        // 設定畫布尺寸
+        const canvasWidth = 600;
+        const headerHeight = 200; // 上方文字區域高度
+        const imageAreaHeight = 600; // 下方圖片區域高度 (維持正方形)
+        
+        // 總高度
+        canvas.width = canvasWidth;
+        canvas.height = headerHeight + imageAreaHeight;
+
+        // 1. 繪製上方背景 (白色卡片質感)
+        ctx.fillStyle = '#ffffff'; 
+        ctx.fillRect(0, 0, canvasWidth, headerHeight);
+
+        // 2. 繪製上方文字
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#5A6275'; // 深灰色字體
+
+        // 標題
+        ctx.font = 'bold 32px "Noto Sans TC", sans-serif';
+        ctx.fillText("你的命定情歌是", canvasWidth / 2, 70);
+
+        // 歌名 (優先使用 displayText，否則使用 song)
+        const textToShow = resultData.displayText || resultData.song;
+        
+        // 自動縮放歌名字體
+        let fontSize = 48;
+        ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
+        while (ctx.measureText(textToShow).width > canvasWidth * 0.9 && fontSize > 24) {
+            fontSize -= 4;
+            ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
+        }
+        ctx.fillText(textToShow, canvasWidth / 2, 140);
+
+        // 3. 繪製圖片 (在 headerHeight 之後開始畫)
         if (resultData.image) {
             const img = new Image();
             img.onload = function() {
-                // 1. 繪製底圖
-                ctx.drawImage(img, 0, 0, w, h);
+                // 繪製圖片在下方區域
+                ctx.drawImage(img, 0, headerHeight, canvasWidth, imageAreaHeight);
                 
-                // --- 需求2：在 Canvas 上繪製標題和歌名 ---
-                drawTopText(ctx, w, resultData.song);
-
-                // --- 需求1：繪製縮小的底部遮罩和文字 ---
-                // 遮罩高度縮減 50% (原 h/3 -> h/6)
-                const maskHeight = h / 6;
-                const maskY = h - maskHeight;
-                
-                // 繪製半透明白色遮罩
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-                ctx.fillRect(0, maskY, w, maskHeight);
-                
-                // 繪製遮罩上的文字
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillStyle = '#5A6275';
-                
-                // 如果有 overlayText 才顯示
-                if (resultData.overlayText) {
-                    // 文字大小縮減 50% (原 48 -> 24)
-                    let fontSize = 24;
-                    ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
-                    
-                    // 繪製文字於縮小後的遮罩中央
-                    ctx.fillText(resultData.overlayText, w/2, maskY + maskHeight/2);
-                }
-
-                // 輸出圖片
+                // 完成，輸出
                 imgOutput.src = canvas.toDataURL('image/jpeg', 0.9);
                 if (callback) callback();
             };
             img.onerror = function() {
-                 console.warn("找不到圖片: " + resultData.image + "，切換為自動生成模式。");
-                 drawFallbackResult(ctx, w, h, mbti, resultData.song);
+                 console.warn("找不到圖片: " + resultData.image);
+                 // 沒圖時畫個色塊備案
+                 drawFallbackGraphics(ctx, canvasWidth, imageAreaHeight, headerHeight, mbti);
                  imgOutput.src = canvas.toDataURL('image/png');
                  if (callback) callback();
             }
             img.src = resultData.image; 
         } 
         else {
-            // 沒有圖片時，使用備用繪圖邏輯
-            drawFallbackResult(ctx, w, h, mbti, resultData.song);
+            // 沒有指定圖片，畫備用幾何圖形
+            drawFallbackGraphics(ctx, canvasWidth, imageAreaHeight, headerHeight, mbti);
             imgOutput.src = canvas.toDataURL('image/png');
             if (callback) callback();
         }
     }
 
-    // 輔助函式：繪製頂部標題和歌名 (用於有照片背景時)
-    function drawTopText(ctx, w, songName) {
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        
-        // 設置文字樣式：白色描邊 + 深色填充，確保在任何背景都清楚
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 4;
-        ctx.fillStyle = '#5A6275';
-        ctx.lineJoin = 'round';
-
-        // 繪製標題
-        ctx.font = 'bold 32px "Noto Sans TC", sans-serif';
-        ctx.strokeText("你的命定情歌是", w / 2, 40);
-        ctx.fillText("你的命定情歌是", w / 2, 40);
-
-        // 繪製歌名 (自動縮放大小)
-        let songFontSize = 56;
-        ctx.font = `bold ${songFontSize}px "Noto Sans TC", sans-serif`;
-        while (ctx.measureText(songName).width > w * 0.85 && songFontSize > 30) {
-            songFontSize -= 4;
-            ctx.font = `bold ${songFontSize}px "Noto Sans TC", sans-serif`;
-        }
-        ctx.strokeText(songName, w / 2, 90);
-        ctx.fillText(songName, w / 2, 90);
-    }
-
-    // 繪製備用圖 (修改：加入標題並重新排版)
-    function drawFallbackResult(ctx, w, h, mbti, song) {
-        // 1. 背景與幾何圖形
+    // 繪製備用幾何圖形 (只畫在下方區域)
+    function drawFallbackGraphics(ctx, w, h, offsetY, mbti) {
+        // 背景
         const bgColor = colors.bg[Math.floor(Math.random() * colors.bg.length)];
         ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, w, h);
+        ctx.fillRect(0, offsetY, w, h);
 
+        // 裝飾
         ctx.save();
+        // 限制繪圖區域在下方
+        ctx.beginPath();
+        ctx.rect(0, offsetY, w, h);
+        ctx.clip();
+
         for(let i=0; i<6; i++) {
             ctx.fillStyle = colors.shapes[Math.floor(Math.random() * colors.shapes.length)];
             ctx.globalAlpha = 0.5;
             ctx.beginPath();
             const x = Math.random() * w;
-            const y = Math.random() * h;
+            const y = offsetY + Math.random() * h;
             const r = 60 + Math.random() * 120;
             ctx.arc(x, y, r, 0, Math.PI * 2);
             ctx.fill();
         }
-        ctx.restore();
-
-        // 2. 線條裝飾
-        ctx.strokeStyle = "rgba(255,255,255,0.4)";
-        ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(w/2, h/2, w*0.42, 0, Math.PI*2); ctx.stroke();
-        ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(w/2, h/2, w*0.44, 0, Math.PI*2); ctx.stroke();
         
-        // 3. 文字繪製 (重新排版)
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        // 標題
-        ctx.font = 'bold 32px "Noto Sans TC", sans-serif';
+        // CD 圈圈
+        const cx = w/2;
+        const cy = offsetY + h/2;
+        ctx.strokeStyle = "rgba(255,255,255,0.4)";
+        ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, w*0.42, 0, Math.PI*2); ctx.stroke();
+        ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, w*0.44, 0, Math.PI*2); ctx.stroke();
+        
+        // MBTI 大字
+        ctx.globalAlpha = 1;
         ctx.fillStyle = '#75809C';
-        ctx.fillText("你的命定情歌是", w/2, h/2 - 120);
-
-        // MBTI
-        ctx.font = 'bold 80px "Noto Sans TC", sans-serif';
-        ctx.fillText(mbti, w/2, h/2 - 40);
-
-        // 分隔線
-        ctx.beginPath();
-        ctx.moveTo(w/2 - 50, h/2 + 20);
-        ctx.lineTo(w/2 + 50, h/2 + 20);
-        ctx.strokeStyle = '#8D8FA4';
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        // 歌名
-        ctx.font = 'bold 48px "Noto Sans TC", sans-serif';
-        ctx.fillStyle = '#5A6275';
-        ctx.fillText(song, w/2, h/2 + 80);
-
-        // 底部小字
-        ctx.font = '24px "Noto Sans TC", sans-serif';
-        ctx.fillStyle = '#97A5C0';
-        ctx.fillText("Winter Playlist 2024", w/2, h - 40);
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 100px "Noto Sans TC", sans-serif';
+        ctx.fillText(mbti, cx, cy + 30);
+        
+        ctx.restore();
     }
 
-    // 重新測驗
     function resetQuiz() {
         userSelection.IE = null; userSelection.NS = null;
         userSelection.FT = null; userSelection.PJ = null;
@@ -533,7 +393,6 @@
         document.getElementById('quizSection').style.display = 'flex';
     }
 
-    // 分享功能
     async function handleShare() {
         const canvas = document.getElementById('resultCanvas');
         if (navigator.canShare && navigator.share) {
@@ -555,6 +414,5 @@
         }
     }
 </script>
-
 </body>
 </html>
