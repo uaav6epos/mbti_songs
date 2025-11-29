@@ -45,9 +45,9 @@
             transition: padding 0.3s ease;
         }
         
-        /* 結果頁面時頂部間隔為 3px */
+        /* 需求1：結果頁面頂部間隔調整 (原 3px + 增加 20px = 23px) */
         .container.result-mode {
-            padding-top: 3px;
+            padding-top: 23px;
         }
 
         h1 {
@@ -164,10 +164,8 @@
             -webkit-user-select: none; -webkit-touch-callout: default;
         }
 
-        /* 需求2：結果卡片跟 MV 之間間隔增加 10% */
         .hint-text {
             font-size: 0.85rem; color: var(--c-dark);
-            /* 原本 10px，增加到 15px，讓間隔稍微變大 */
             margin: 15px 0; 
             opacity: 0.9;
             text-align: center;
@@ -343,8 +341,7 @@
             ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
         }
         
-        // 需求1：結果卡片的兩行字間隔縮減 10%
-        // 原本 Y=110，距離 40 差距 70。縮減 10% 後約為 63，所以位置上移至 103
+        // 字間距與之前設定相同
         ctx.fillText(textToShow, canvasWidth / 2, 103);
 
         // 3. 圖片
