@@ -354,4 +354,139 @@
         const groupEl = document.querySelector(`.toggle-group[data-type="${group}"]`);
         const btns = groupEl.querySelectorAll('.toggle-btn');
         btns.forEach(btn => {
-            btn.classList.toggle('active', btn.innerText ===
+            btn.classList.toggle('active', btn.innerText === value);
+        });
+    }
+
+    // 送出測驗
+    function submitQuiz() {
+        if (!userSelection.IE || !userSelection.NS || !userSelection.FT || !userSelection.PJ) {
+            alert("請先完成所有 MBTI 選項喔！");
+            return;
+        }
+
+        document.getElementById('quizSection').style.display = 'none';
+        document.getElementById('loadingSection').style.display = 'flex';
+
+        const mbtiResult = `${userSelection.IE}${userSelection.NS}${userSelection.FT}${userSelection.PJ}`;
+        const resultData = resultMap[mbtiResult] || { song: 'Little Present' };
+
+        generateResultImage(mbtiResult, resultData, () => {
+             setTimeout(() => {
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('resultSection').style.display = 'flex';
+            }, 2500);
+        });
+    }
+
+    // 生成圖片
+    function generateResultImage(mbti, resultData, callback) {
+        const canvas = document.getElementById('resultCanvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        const imgOutput = document.getElementById('resultImage');
+
+        if (resultData.image) {
+            const img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, w, h);
+                imgOutput.src = canvas.toDataURL('image/jpeg', 0.9);
+                if (callback) callback();
+            };
+            img.onerror = function() {
+                 console.warn("找不到圖片: " + resultData.image + "，切換為自動生成模式。");
+                 drawFallbackResult(ctx, w, h, mbti, resultData.song);
+                 imgOutput.src = canvas.toDataURL('image/png');
+                 if (callback) callback();
+            }
+            img.src = resultData.image; 
+        } 
+        else {
+            drawFallbackResult(ctx, w, h, mbti, resultData.song);
+            imgOutput.src = canvas.toDataURL('image/png');
+            if (callback) callback();
+        }
+    }
+
+    // 繪製備用圖
+    function drawFallbackResult(ctx, w, h, mbti, song) {
+        const bgColor = colors.bg[Math.floor(Math.random() * colors.bg.length)];
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.save();
+        for(let i=0; i<6; i++) {
+            ctx.fillStyle = colors.shapes[Math.floor(Math.random() * colors.shapes.length)];
+            ctx.globalAlpha = 0.5;
+            ctx.beginPath();
+            const x = Math.random() * w;
+            const y = Math.random() * h;
+            const r = 60 + Math.random() * 120;
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.restore();
+
+        ctx.strokeStyle = "rgba(255,255,255,0.4)";
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(w/2, h/2, w*0.42, 0, Math.PI*2); ctx.stroke();
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(w/2, h/2, w*0.44, 0, Math.PI*2); ctx.stroke();
+        
+        ctx.fillStyle = '#75809C';
+        ctx.textAlign = 'center';
+        
+        ctx.font = 'bold 80px "Noto Sans TC", sans-serif';
+        ctx.fillText(mbti, w/2, h/2 - 40);
+
+        ctx.beginPath();
+        ctx.moveTo(w/2 - 50, h/2);
+        ctx.lineTo(w/2 + 50, h/2);
+        ctx.strokeStyle = '#8D8FA4';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.font = 'bold 42px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#5A6275';
+        ctx.fillText(song, w/2, h/2 + 70);
+
+        ctx.font = '24px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#97A5C0';
+        ctx.fillText("Winter Playlist 2024", w/2, h - 50);
+    }
+
+    // 重新測驗
+    function resetQuiz() {
+        userSelection.IE = null; userSelection.NS = null;
+        userSelection.FT = null; userSelection.PJ = null;
+        document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('quizSection').style.display = 'flex';
+    }
+
+    // 分享功能
+    async function handleShare() {
+        const canvas = document.getElementById('resultCanvas');
+        if (navigator.canShare && navigator.share) {
+            try {
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], "winter_song_result.png", { type: "image/png" });
+                    const shareData = {
+                        text: '測測看你的 MBTI 冬日情歌是什麼？ #冬日情歌測驗',
+                        files: [file]
+                    };
+                    await navigator.share(shareData);
+                }, 'image/png');
+            } catch (err) {
+                console.log("Share failed or canceled:", err);
+                alert("您的瀏覽器不支援直接分享圖片。\n\n請長按上方的圖片儲存到手機相簿，再手動打開 Instagram 分享喔！");
+            }
+        } else {
+            alert("請長按上方的圖片儲存到手機相簿，再手動打開 Instagram 分享喔！");
+        }
+    }
+</script>
+
+</body>
+</html>
