@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>冬日命定情歌測驗</title>
+    
+    <meta property="og:title" content="冬日命定情歌測驗">
+    <meta property="og:description" content="輸入你的 MBTI，測驗這個冬日你的命定情歌">
+    <meta property="og:image" content="player.jpg">
+    <meta property="og:type" content="website">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
@@ -53,22 +59,20 @@
             position: relative;
         }
 
-        /* 修改：縮減標題間距 (原本 margin: 1.5rem 0 2rem) */
         h1 {
             color: var(--c-primary);
             text-align: center;
             font-size: 1.5rem;
-            margin: 0.75rem 0 1rem; /* 上下間距縮減 50% */
+            margin: 0.75rem 0 1rem;
             line-height: 1.4;
             text-shadow: 2px 2px 0px var(--c-light);
         }
 
-        /* --- 首頁大圖樣式 --- */
+        /* --- 圖片樣式 (首頁與 Loading 共用) --- */
         .cover-image-wrap {
             width: 100%;
             display: flex;
             justify-content: center;
-            /* 圖片下方原本有間距，這裡保持微量或移除，由 h1 margin 控制 */
             margin-bottom: 0.2rem; 
         }
 
@@ -80,75 +84,19 @@
             object-fit: cover;
         }
 
-        /* --- Loading 頁面的唱機樣式 --- */
-        .record-player-wrap {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .record-player {
-            background: #333;
-            border-radius: 50%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.15);
-            border: 4px solid var(--c-4);
-        }
-
-        .record-player::before {
-            content: '';
-            position: absolute;
-            width: 92%;
-            height: 92%;
-            border-radius: 50%;
-            border: 1px solid #444;
-            background: repeating-radial-gradient(circle, #333, #333 10px, #3a3a3a 11px, #3a3a3a 12px);
-        }
-
-        .record-label {
-            background: var(--c-accent);
-            border-radius: 50%;
-            z-index: 2;
-            border: 3px solid #eee;
-        }
-
-        .loading-player .record-player {
-            width: 250px;
-            height: 250px;
-             box-shadow: 10px 10px 20px rgba(0,0,0,0.1);
-        }
-        .loading-player .record-label {
-            width: 90px;
-            height: 90px;
-        }
-
-        .spinning {
-            animation: spin 3s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         /* --- 選擇器樣式 --- */
         .quiz-section {
             width: 100%;
             display: flex;
             flex-direction: column;
-            /* 修改：縮小整體元件間距，讓畫面更緊湊 */
             gap: 0.5rem; 
             transition: opacity 0.5s;
         }
 
-        /* 新增：網格佈局容器 (用於兩欄兩列) */
         .options-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 兩欄 */
-            gap: 12px; /* 按鈕組之間的間距 */
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             width: 100%;
             margin-bottom: 0.5rem;
         }
@@ -158,20 +106,20 @@
             justify-content: space-between;
             background: var(--c-light);
             border-radius: 50px;
-            padding: 4px; /* 稍微縮小內距 */
+            padding: 4px;
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
-            width: 100%; /* 確保填滿網格 */
+            width: 100%;
         }
 
         .toggle-btn {
             flex: 1;
             border: none;
             background: transparent;
-            padding: 10px 0; /* 修改：調整 padding 避免在小螢幕換行 */
+            padding: 10px 0;
             border-radius: 50px;
             font-family: 'Noto Sans TC', sans-serif;
             font-weight: bold;
-            font-size: 1.1rem; /* 稍微縮小字體以適應兩欄 */
+            font-size: 1.1rem;
             color: var(--c-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -205,13 +153,29 @@
             box-shadow: 2px 2px 0px var(--c-dark);
         }
 
-        /* --- Loading / Result 區塊 (維持原樣) --- */
+        /* --- Loading 區塊 (修改後) --- */
         .loading-section {
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 60vh;
+            height: 70vh; /* 稍微增加高度確保置中 */
+        }
+
+        /* 需求2：Loading 畫面改用圖片 */
+        .loading-image {
+            width: 250px; /* 控制 Loading 圖片大小 */
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.15);
+            /* 加入呼吸燈動畫取代旋轉 */
+            animation: breathe 2s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(0.98); opacity: 0.9; }
+            50% { transform: scale(1.02); opacity: 1; }
+            100% { transform: scale(0.98); opacity: 0.9; }
         }
 
         .loading-text {
@@ -227,6 +191,7 @@
             50% { opacity: 1; }
         }
 
+        /* --- Result 區塊 --- */
         .result-section {
             display: none;
             flex-direction: column;
@@ -311,7 +276,7 @@
             <img src="player.jpg" alt="Winter Record Player" class="cover-image">
         </div>
         
-        <h1>點擊選擇你的 MBTI<br>測驗這個冬日你的命定情歌🎵</h1>
+        <h1>輸入你的 MBTI<br>測驗這個冬日你的命定情歌</h1>
         
         <div class="options-grid">
             <div class="toggle-group" data-type="IE">
@@ -339,11 +304,7 @@
     </div>
 
     <div class="loading-section" id="loadingSection">
-        <div class="record-player-wrap loading-player">
-            <div class="record-player spinning">
-                <div class="record-label"></div>
-            </div>
-        </div>
+        <img src="player.jpg" alt="Loading Soul Frequency" class="loading-image">
         <p class="loading-text">正在讀取你的靈魂頻率...</p>
     </div>
 
@@ -352,7 +313,7 @@
             <canvas id="resultCanvas" width="600" height="600"></canvas>
             <img id="resultImage" alt="Result Cover" />
         </div>
-        <p class="hint-text">↑ 長按上方封面即可儲存圖片 ↑<br>分享到 IG @zooeywonder<br>分享給他你的命定情歌</p>
+        <p class="hint-text">↑ 長按上方封面即可儲存圖片 ↑<br>（分享到 IG 需手動上傳喔！）</p>
         
         <div class="action-buttons">
             <button class="action-btn" onclick="resetQuiz()">重新測驗</button>
@@ -393,139 +354,4 @@
         const groupEl = document.querySelector(`.toggle-group[data-type="${group}"]`);
         const btns = groupEl.querySelectorAll('.toggle-btn');
         btns.forEach(btn => {
-            btn.classList.toggle('active', btn.innerText === value);
-        });
-    }
-
-    // 送出測驗
-    function submitQuiz() {
-        if (!userSelection.IE || !userSelection.NS || !userSelection.FT || !userSelection.PJ) {
-            alert("請先完成所有 MBTI 選項喔！");
-            return;
-        }
-
-        document.getElementById('quizSection').style.display = 'none';
-        document.getElementById('loadingSection').style.display = 'flex';
-
-        const mbtiResult = `${userSelection.IE}${userSelection.NS}${userSelection.FT}${userSelection.PJ}`;
-        const resultData = resultMap[mbtiResult] || { song: 'Little Present' };
-
-        generateResultImage(mbtiResult, resultData, () => {
-             setTimeout(() => {
-                document.getElementById('loadingSection').style.display = 'none';
-                document.getElementById('resultSection').style.display = 'flex';
-            }, 2500);
-        });
-    }
-
-    // 生成圖片
-    function generateResultImage(mbti, resultData, callback) {
-        const canvas = document.getElementById('resultCanvas');
-        const ctx = canvas.getContext('2d');
-        const w = canvas.width;
-        const h = canvas.height;
-        const imgOutput = document.getElementById('resultImage');
-
-        if (resultData.image) {
-            const img = new Image();
-            img.onload = function() {
-                ctx.drawImage(img, 0, 0, w, h);
-                imgOutput.src = canvas.toDataURL('image/jpeg', 0.9);
-                if (callback) callback();
-            };
-            img.onerror = function() {
-                 console.warn("找不到圖片: " + resultData.image + "，切換為自動生成模式。");
-                 drawFallbackResult(ctx, w, h, mbti, resultData.song);
-                 imgOutput.src = canvas.toDataURL('image/png');
-                 if (callback) callback();
-            }
-            img.src = resultData.image; 
-        } 
-        else {
-            drawFallbackResult(ctx, w, h, mbti, resultData.song);
-            imgOutput.src = canvas.toDataURL('image/png');
-            if (callback) callback();
-        }
-    }
-
-    // 繪製備用圖
-    function drawFallbackResult(ctx, w, h, mbti, song) {
-        const bgColor = colors.bg[Math.floor(Math.random() * colors.bg.length)];
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, w, h);
-
-        ctx.save();
-        for(let i=0; i<6; i++) {
-            ctx.fillStyle = colors.shapes[Math.floor(Math.random() * colors.shapes.length)];
-            ctx.globalAlpha = 0.5;
-            ctx.beginPath();
-            const x = Math.random() * w;
-            const y = Math.random() * h;
-            const r = 60 + Math.random() * 120;
-            ctx.arc(x, y, r, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        ctx.restore();
-
-        ctx.strokeStyle = "rgba(255,255,255,0.4)";
-        ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.arc(w/2, h/2, w*0.42, 0, Math.PI*2); ctx.stroke();
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.arc(w/2, h/2, w*0.44, 0, Math.PI*2); ctx.stroke();
-        
-        ctx.fillStyle = '#75809C';
-        ctx.textAlign = 'center';
-        
-        ctx.font = 'bold 80px "Noto Sans TC", sans-serif';
-        ctx.fillText(mbti, w/2, h/2 - 40);
-
-        ctx.beginPath();
-        ctx.moveTo(w/2 - 50, h/2);
-        ctx.lineTo(w/2 + 50, h/2);
-        ctx.strokeStyle = '#8D8FA4';
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        ctx.font = 'bold 42px "Noto Sans TC", sans-serif';
-        ctx.fillStyle = '#5A6275';
-        ctx.fillText(song, w/2, h/2 + 70);
-
-        ctx.font = '24px "Noto Sans TC", sans-serif';
-        ctx.fillStyle = '#97A5C0';
-        ctx.fillText("Winter Playlist 2024", w/2, h - 50);
-    }
-
-    // 重新測驗
-    function resetQuiz() {
-        userSelection.IE = null; userSelection.NS = null;
-        userSelection.FT = null; userSelection.PJ = null;
-        document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('resultSection').style.display = 'none';
-        document.getElementById('quizSection').style.display = 'flex';
-    }
-
-    // 分享功能
-    async function handleShare() {
-        const canvas = document.getElementById('resultCanvas');
-        if (navigator.canShare && navigator.share) {
-            try {
-                canvas.toBlob(async (blob) => {
-                    const file = new File([blob], "winter_song_result.png", { type: "image/png" });
-                    const shareData = {
-                        text: '測測看你的 MBTI 冬日情歌是什麼？ #冬日情歌測驗',
-                        files: [file]
-                    };
-                    await navigator.share(shareData);
-                }, 'image/png');
-            } catch (err) {
-                console.log("Share failed or canceled:", err);
-                alert("您的瀏覽器不支援直接分享圖片。\n\n請長按上方的圖片儲存到手機相簿，再手動打開 Instagram 分享喔！");
-            }
-        } else {
-            alert("請長按上方的圖片儲存到手機相簿，再手動打開 Instagram 分享喔！");
-        }
-    }
-</script>
-
-</body>
-</html>
+            btn.classList.toggle('active', btn.innerText ===
