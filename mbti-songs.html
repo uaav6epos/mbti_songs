@@ -39,9 +39,16 @@
 
         .container {
             width: 100%; max-width: 480px;
+            /* 預設首頁的 padding */
             padding: 2rem 1.5rem;
             display: flex; flex-direction: column;
             align-items: center; position: relative;
+            transition: padding 0.3s ease; /* 加入過渡效果 */
+        }
+        
+        /* 需求1：結果頁面時，透過 JS 加入此 class 來調整頂部間隔為 3px */
+        .container.result-mode {
+            padding-top: 3px;
         }
 
         h1 {
@@ -142,7 +149,6 @@
         .result-card {
             width: 260px;
             height: auto;
-            /* 修改：移除下方 margin，由文字區的 margin 來控制間距 */
             margin-bottom: 0; 
             box-shadow: 10px 10px 20px rgba(0,0,0,0.15);
             border-radius: 12px; 
@@ -159,11 +165,11 @@
             -webkit-user-select: none; -webkit-touch-callout: default;
         }
 
-        /* 需求1：調整提示文字位置與間距 */
+        /* 需求3：將上下間隙縮減，讓卡片和 MV 靠近一點 */
         .hint-text {
             font-size: 0.85rem; color: var(--c-dark);
-            /* 上下間隙調整成 20px */
-            margin: 20px 0; 
+            /* 原本是 20px，縮減為 10px，拉近距離 */
+            margin: 10px 0; 
             opacity: 0.9;
             text-align: center;
             line-height: 1.6;
@@ -291,6 +297,9 @@
         document.getElementById('quizSection').style.display = 'none';
         document.getElementById('loadingSection').style.display = 'flex';
         
+        // 需求1：切換到結果模式，調整頂部間距
+        document.querySelector('.container').classList.add('result-mode');
+        
         const mbtiResult = `${userSelection.IE}${userSelection.NS}${userSelection.FT}${userSelection.PJ}`;
         const resultData = resultMap[mbtiResult] || { song: 'Little Present' };
 
@@ -307,7 +316,6 @@
         const ctx = canvas.getContext('2d');
         const imgOutput = document.getElementById('resultImage');
 
-        // 設定畫布尺寸
         const canvasWidth = 600;
         const headerHeight = 130; 
         const imageAreaHeight = 600; 
@@ -315,36 +323,35 @@
         canvas.width = canvasWidth;
         canvas.height = headerHeight + imageAreaHeight;
 
-        // 1. 繪製上方背景
+        // 1. 背景
         ctx.fillStyle = '#ffffff'; 
         ctx.fillRect(0, 0, canvasWidth, headerHeight);
 
-        // 2. 繪製上方文字
+        // 2. 文字
         ctx.textAlign = 'center';
         ctx.fillStyle = '#5A6275'; 
 
         // 標題
         ctx.font = 'bold 32px "Noto Sans TC", sans-serif';
-        // 微調 Y 位置，讓它與下方的歌名間距平衡
-        ctx.fillText("你的命定情歌是", canvasWidth / 2, 50);
+        // 需求2：調整標題位置 Y=40
+        ctx.fillText("你的命定情歌是", canvasWidth / 2, 40);
 
         // 歌名
         const textToShow = resultData.displayText || resultData.song;
         
-        // 需求2：歌名文字縮小 30% (原 48 -> 34)
+        // 歌名文字大小維持上一次修改的 34px
         let fontSize = 34; 
         ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
         
-        // 重新計算字體大小，如果文字太長則自動縮小 (最小限制下修)
         while (ctx.measureText(textToShow).width > canvasWidth * 0.9 && fontSize > 20) {
             fontSize -= 2;
             ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
         }
         
-        // 微調 Y 位置 (原 95)
-        ctx.fillText(textToShow, canvasWidth / 2, 95);
+        // 需求2：調整歌名位置 Y=110，增加與標題的距離
+        ctx.fillText(textToShow, canvasWidth / 2, 110);
 
-        // 3. 繪製圖片
+        // 3. 圖片
         if (resultData.image) {
             const img = new Image();
             img.onload = function() {
@@ -409,6 +416,8 @@
         document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById('resultSection').style.display = 'none';
         document.getElementById('quizSection').style.display = 'flex';
+        // 移除結果模式樣式
+        document.querySelector('.container').classList.remove('result-mode');
         // 重整 iframe
         const iframe = document.querySelector('.video-iframe');
         iframe.src = iframe.src;
