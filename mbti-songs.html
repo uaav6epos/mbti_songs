@@ -157,11 +157,9 @@
             height: 70vh;
         }
 
-        /* 需求1：Loading 圖片改為 heartbeat.png */
         .loading-image {
-            width: 120px; /* 心跳圖通常不需要太大，您可以調整 */
+            width: 120px;
             height: auto;
-            /* 輕微的呼吸/心跳動畫 */
             animation: breathe 1.5s infinite ease-in-out;
         }
 
@@ -191,23 +189,6 @@
             align-items: center;
             width: 100%;
             animation: fadeIn 1s ease;
-        }
-
-        /* 需求4：結果頁標題 */
-        .result-title {
-            color: var(--c-primary);
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        /* 需求5：結果頁歌曲名稱內文 */
-        .result-song-name {
-            color: var(--c-text);
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-            text-align: center;
         }
 
         @keyframes fadeIn {
@@ -319,10 +300,6 @@
     </div>
 
     <div class="result-section" id="resultSection">
-        <h2 class="result-title">你的命定情歌是</h2>
-        
-        <div class="result-song-name" id="resultSongText"></div>
-
         <div class="result-card">
             <canvas id="resultCanvas" width="600" height="600"></canvas>
             <img id="resultImage" alt="Result Cover" />
@@ -350,8 +327,6 @@
     };
 
     // 結果對照表
-    // 需求2：ESFJ 改為「喜歡一個人」
-    // 需求3：INTJ 圖片改為 convert_intj.jpg，並新增 overlayText 屬性來處理遮罩文字
     const resultMap = {
         'INTJ': { 
             song: 'i 人情歌', 
@@ -366,7 +341,7 @@
         'ESTJ': { song: 'I could be yours' },
         
         'ENTJ': { song: '喜歡一個人' }, 'ENTP': { song: '喜歡一個人' },
-        'ESFJ': { song: '喜歡一個人' }, // 修正點
+        'ESFJ': { song: '喜歡一個人' },
         
         'ENFJ': { song: 'Little Present' }, 'ESFP': { song: 'Little Present' }
     };
@@ -394,8 +369,7 @@
         const mbtiResult = `${userSelection.IE}${userSelection.NS}${userSelection.FT}${userSelection.PJ}`;
         const resultData = resultMap[mbtiResult] || { song: 'Little Present' };
 
-        // 需求5：在結果頁面更新內文顯示
-        document.getElementById('resultSongText').innerText = resultData.song;
+        // 修改：不再需要設置 HTML 元素的文字
 
         generateResultImage(mbtiResult, resultData, () => {
              setTimeout(() => {
@@ -405,7 +379,7 @@
         });
     }
 
-    // 生成圖片
+    // 生成圖片 (核心修改)
     function generateResultImage(mbti, resultData, callback) {
         const canvas = document.getElementById('resultCanvas');
         const ctx = canvas.getContext('2d');
@@ -419,8 +393,12 @@
                 // 1. 繪製底圖
                 ctx.drawImage(img, 0, 0, w, h);
                 
-                // 需求3：樣式修改為圖片上壓上三分之一半透明遮罩在下方
-                const maskHeight = h / 3;
+                // --- 需求2：在 Canvas 上繪製標題和歌名 ---
+                drawTopText(ctx, w, resultData.song);
+
+                // --- 需求1：繪製縮小的底部遮罩和文字 ---
+                // 遮罩高度縮減 50% (原 h/3 -> h/6)
+                const maskHeight = h / 6;
                 const maskY = h - maskHeight;
                 
                 // 繪製半透明白色遮罩
@@ -430,21 +408,17 @@
                 // 繪製遮罩上的文字
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillStyle = '#5A6275'; // 使用深灰色字體
+                ctx.fillStyle = '#5A6275';
                 
-                // 使用 overlayText (例如：黃玠瑋〈 i 人情歌〉) 優先，如果沒有則使用 song
-                const textToDraw = resultData.overlayText || resultData.song;
-                
-                // 自動調整字體大小以適應寬度
-                let fontSize = 48;
-                ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
-                // 簡單的文字寬度檢查
-                while (ctx.measureText(textToDraw).width > w * 0.9 && fontSize > 20) {
-                    fontSize -= 2;
+                // 如果有 overlayText 才顯示
+                if (resultData.overlayText) {
+                    // 文字大小縮減 50% (原 48 -> 24)
+                    let fontSize = 24;
                     ctx.font = `bold ${fontSize}px "Noto Sans TC", sans-serif`;
+                    
+                    // 繪製文字於縮小後的遮罩中央
+                    ctx.fillText(resultData.overlayText, w/2, maskY + maskHeight/2);
                 }
-                
-                ctx.fillText(textToDraw, w/2, maskY + maskHeight/2);
 
                 // 輸出圖片
                 imgOutput.src = canvas.toDataURL('image/jpeg', 0.9);
@@ -459,14 +433,43 @@
             img.src = resultData.image; 
         } 
         else {
+            // 沒有圖片時，使用備用繪圖邏輯
             drawFallbackResult(ctx, w, h, mbti, resultData.song);
             imgOutput.src = canvas.toDataURL('image/png');
             if (callback) callback();
         }
     }
 
-    // 繪製備用圖 (當沒有圖片檔時)
+    // 輔助函式：繪製頂部標題和歌名 (用於有照片背景時)
+    function drawTopText(ctx, w, songName) {
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        
+        // 設置文字樣式：白色描邊 + 深色填充，確保在任何背景都清楚
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#5A6275';
+        ctx.lineJoin = 'round';
+
+        // 繪製標題
+        ctx.font = 'bold 32px "Noto Sans TC", sans-serif';
+        ctx.strokeText("你的命定情歌是", w / 2, 40);
+        ctx.fillText("你的命定情歌是", w / 2, 40);
+
+        // 繪製歌名 (自動縮放大小)
+        let songFontSize = 56;
+        ctx.font = `bold ${songFontSize}px "Noto Sans TC", sans-serif`;
+        while (ctx.measureText(songName).width > w * 0.85 && songFontSize > 30) {
+            songFontSize -= 4;
+            ctx.font = `bold ${songFontSize}px "Noto Sans TC", sans-serif`;
+        }
+        ctx.strokeText(songName, w / 2, 90);
+        ctx.fillText(songName, w / 2, 90);
+    }
+
+    // 繪製備用圖 (修改：加入標題並重新排版)
     function drawFallbackResult(ctx, w, h, mbti, song) {
+        // 1. 背景與幾何圖形
         const bgColor = colors.bg[Math.floor(Math.random() * colors.bg.length)];
         ctx.fillStyle = bgColor;
         ctx.fillRect(0, 0, w, h);
@@ -484,32 +487,41 @@
         }
         ctx.restore();
 
+        // 2. 線條裝飾
         ctx.strokeStyle = "rgba(255,255,255,0.4)";
-        ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.arc(w/2, h/2, w*0.42, 0, Math.PI*2); ctx.stroke();
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.arc(w/2, h/2, w*0.44, 0, Math.PI*2); ctx.stroke();
+        ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(w/2, h/2, w*0.42, 0, Math.PI*2); ctx.stroke();
+        ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(w/2, h/2, w*0.44, 0, Math.PI*2); ctx.stroke();
         
-        ctx.fillStyle = '#75809C';
+        // 3. 文字繪製 (重新排版)
         ctx.textAlign = 'center';
-        
+        ctx.textBaseline = 'middle';
+
+        // 標題
+        ctx.font = 'bold 32px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#75809C';
+        ctx.fillText("你的命定情歌是", w/2, h/2 - 120);
+
+        // MBTI
         ctx.font = 'bold 80px "Noto Sans TC", sans-serif';
         ctx.fillText(mbti, w/2, h/2 - 40);
 
+        // 分隔線
         ctx.beginPath();
-        ctx.moveTo(w/2 - 50, h/2);
-        ctx.lineTo(w/2 + 50, h/2);
+        ctx.moveTo(w/2 - 50, h/2 + 20);
+        ctx.lineTo(w/2 + 50, h/2 + 20);
         ctx.strokeStyle = '#8D8FA4';
         ctx.lineWidth = 4;
         ctx.stroke();
 
-        ctx.font = 'bold 42px "Noto Sans TC", sans-serif';
+        // 歌名
+        ctx.font = 'bold 48px "Noto Sans TC", sans-serif';
         ctx.fillStyle = '#5A6275';
-        ctx.fillText(song, w/2, h/2 + 70);
+        ctx.fillText(song, w/2, h/2 + 80);
 
+        // 底部小字
         ctx.font = '24px "Noto Sans TC", sans-serif';
         ctx.fillStyle = '#97A5C0';
-        ctx.fillText("Winter Playlist 2024", w/2, h - 50);
+        ctx.fillText("Winter Playlist 2024", w/2, h - 40);
     }
 
     // 重新測驗
